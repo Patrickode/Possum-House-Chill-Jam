@@ -9,8 +9,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private Collider coll;
 
-    public float jumpStrength = 1;
-    public float aerialMobility = 1;
+    public float jumpStrength = 250;
+    public float aerialMobility = 50;
 
     void Update()
     {
