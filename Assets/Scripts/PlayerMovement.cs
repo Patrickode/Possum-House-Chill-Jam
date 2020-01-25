@@ -14,19 +14,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             ApplyJumpInput(Vector3.forward);
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
         {
             ApplyJumpInput(-Vector3.forward);
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             ApplyJumpInput(Vector3.right);
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
         {
             ApplyJumpInput(-Vector3.right);
         }
@@ -36,12 +36,18 @@ public class PlayerMovement : MonoBehaviour
     /// Once a key is pressed, jumps in the given direction using force, or applies force in the given direction while
     /// aerial.
     /// </summary>
-    /// <param name="facingDir">The direction to add force in.</param>
-    private void ApplyJumpInput(Vector3 facingDir)
+    /// <param name="forceDir">The direction to add force in.</param>
+    private void ApplyJumpInput(Vector3 forceDir)
     {
-        transform.forward = facingDir;
-
-        rb.AddForce((transform.TransformDirection(Vector3.forward) + Vector3.up) * jumpStrength);
+        if (IsGrounded())
+        {
+            transform.forward = forceDir;
+            rb.AddForce((transform.TransformDirection(Vector3.forward) + Vector3.up) * jumpStrength);
+        }
+        else
+        {
+            rb.AddForce(forceDir * aerialMobility);
+        }
     }
 
     private bool IsGrounded()
