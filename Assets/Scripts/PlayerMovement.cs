@@ -10,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
     private Collider coll;
 
     public float jumpStrength = 250;
-    public float aerialMobility = 50;
 
     void Update()
     {
@@ -44,15 +43,11 @@ public class PlayerMovement : MonoBehaviour
             transform.forward = forceDir;
             rb.AddForce((transform.TransformDirection(Vector3.forward) + Vector3.up) * jumpStrength);
         }
-        else
-        {
-            rb.AddForce(forceDir * aerialMobility);
-        }
     }
 
     private bool IsGrounded()
     {
         //Thanks to http://answers.unity.com/answers/196395/view.html for this!
-        return Physics.Raycast(transform.position, -Vector3.up, coll.bounds.extents.y + 0.05f);
+        return Physics.Raycast(transform.position, -Vector3.up, coll.bounds.extents.y + 0.01f);
     }
 }
