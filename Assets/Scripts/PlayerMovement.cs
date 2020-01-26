@@ -56,7 +56,10 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = Vector3.ClampMagnitude(jumpForce, maxMagn);
 
             //Finally, start rotating in the direction of the jump.
-            //rb.angularVelocity = forceDir * jumpStrength * 5; Rotates along the axis of forceDir, apparently
+            //Angular velocity uses the vector as the axis and length as the strength. Thus cross is needed to get the
+            //perpendicular vector to forceDir.
+            Vector3 rotDir = -Vector3.Cross(forceDir, Vector3.up).normalized;
+            rb.angularVelocity = rotDir * jumpStrength;
         }
     }
 
@@ -69,7 +72,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 175, 175), "Velocity: " + rb.velocity + "\nAng. Velocity: " + rb.angularVelocity +
-            "\nVel Magnitude: " + rb.velocity.magnitude + "\nAngVel Magnitude: " + rb.angularVelocity.magnitude);
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 15;
+        style.normal.textColor = Color.white;
+        GUI.Box
+            (
+                new Rect(10, 10, 175, 175),
+                "Velocity: " + rb.velocity
+                    + "\nAng. Velocity: " + rb.angularVelocity
+                    + "\nVel Magnitude: " + rb.velocity.magnitude
+                    + "\nAng. Vel. Magnitude: " + rb.angularVelocity.magnitude,
+                style
+            );
     }
 }
