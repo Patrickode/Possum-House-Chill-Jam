@@ -21,5 +21,7 @@ public class CameraFollow : MonoBehaviour
                 focalObj.transform.position.y + camOffset.y,
                 focalObj.transform.position.z + camOffset.z
             );
+
+        transform.LookAt(focalObj.transform);
     }
 }
