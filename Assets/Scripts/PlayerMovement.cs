@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private Collider coll;
 
     public float jumpStrength = 5;
-    
+
     private float maxMagn;
 
     private void Start()
@@ -20,12 +20,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        //If grounded, unfreeze rotation, if it was frozen.
-        if (IsGrounded())
-        {
-            rb.freezeRotation = false;
-        }
-
         //If the WASD keys are pressed, jump in that direction.
         if (Input.GetKey(KeyCode.W))
         {
@@ -46,32 +40,36 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Once a key is pressed, jumps in the given direction using force, or applies force in the given direction while
-    /// aerial.
+    /// Once a key is pressed, jumps in the given direction by setting velocity.
     /// </summary>
-    /// <param name="forceDir">The direction to add force in.</param>
+    /// <param name="forceDir">The direction to jump in.</param>
     private void ApplyJumpInput(Vector3 forceDir)
     {
         if (IsGrounded())
         {
+            //Set the velocities to zero, so we can add velocity onto a clean slate.
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.freezeRotation = true;
 
+            //Set the force vector and make sure it's clamped to the right magnitude.
             Vector3 jumpForce = (forceDir + Vector3.up) * jumpStrength;
             rb.velocity = Vector3.ClampMagnitude(jumpForce, maxMagn);
+
+            //Finally, start rotating in the direction of the jump.
+            //rb.angularVelocity = forceDir * jumpStrength * 5; Rotates along the axis of forceDir, apparently
         }
     }
 
     private bool IsGrounded()
     {
         //Thanks to http://answers.unity.com/answers/196395/view.html for this!
+        //Cast a ray downward to the extent of the object, plus a tiny bit of leeway.
         return Physics.Raycast(transform.position, -Vector3.up, coll.bounds.extents.y + 0.001f);
     }
 
-    //private void OnGUI()
-    //{
-    //    GUI.Box(new Rect(10, 10, 175, 175), "Velocity: " + rb.velocity + "\nAng. Velocity: " + rb.angularVelocity +
-    //        "\nVel Magnitude: " + rb.velocity.magnitude + "\nAngVel Magnitude: " + rb.angularVelocity.magnitude);
-    //}
+    private void OnGUI()
+    {
+        GUI.Box(new Rect(10, 10, 175, 175), "Velocity: " + rb.velocity + "\nAng. Velocity: " + rb.angularVelocity +
+            "\nVel Magnitude: " + rb.velocity.magnitude + "\nAngVel Magnitude: " + rb.angularVelocity.magnitude);
+    }
 }
