@@ -10,10 +10,18 @@ public class PlayerMovement : MonoBehaviour
     private Collider coll;
 
     public float jumpStrength = 5;
+    /// <summary>
+    /// How long it takes to go up a charge level.
+    /// </summary>
     public float secondsToCharge = 0.5f;
+    /// <summary>
+    /// How much to multiply jumpStrength by at max charge.
+    /// </summary>
+    public float maxChargeMultiplier = 2;
 
     private float maxMagn;
     private int chargeLevel = 1;
+    private const int MaxChargeLevel = 3;
     private float chargeTimer = 0;
 
     private void Start()
@@ -61,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
         chargeTimer += Time.deltaTime;
 
         //If not at max charge and the timer's been ticking long enough, reset the timer and move up a charge level.
-        if (chargeLevel < 3 && chargeTimer >= secondsToCharge)
+        if (chargeLevel < MaxChargeLevel && chargeTimer >= secondsToCharge)
         {
             chargeTimer = 0;
             chargeLevel++;
@@ -78,15 +86,35 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        //Set the force vector.
-        Vector3 jumpForce = forceDir + Vector3.up;
+        //Set up the force vector, clamp it to make sure it's not too strong, and apply it to velocity.
+        Vector3 jumpForce = (forceDir + Vector3.up) * jumpStrength;
         rb.velocity = Vector3.ClampMagnitude(jumpForce, maxMagn);
+
+        //Now multiply the velocity depending on charge level, if necessary.
+        if (chargeLevel > 1)
+        {
+            //If not at max charge, since we got this far, we're at the second stage.
+            if (chargeLevel < MaxChargeLevel)
+            {
+                //Multiply by the midway point between 1 and max.
+                rb.velocity *= Mathf.Lerp(1, maxChargeMultiplier, 0.5f);
+            }
+            //If we got this far, we're at max charge.
+            else
+            {
+                rb.velocity *= maxChargeMultiplier;
+            }
+        }
 
         //Finally, start rotating in the direction of the jump.
         //Angular velocity uses the vector as the axis and length as the strength. Thus cross is needed to get the
         //perpendicular vector to forceDir.
         Vector3 rotDir = -Vector3.Cross(forceDir, Vector3.up).normalized;
         rb.angularVelocity = rotDir * jumpStrength;
+
+        //Reset charge values, since they were just "expended."
+        chargeTimer = 0;
+        chargeLevel = 1;
     }
 
     private bool IsGrounded()
@@ -107,7 +135,9 @@ public class PlayerMovement : MonoBehaviour
                 "Velocity: " + rb.velocity
                     + "\nAng. Velocity: " + rb.angularVelocity
                     + "\nVel Magnitude: " + rb.velocity.magnitude
-                    + "\nAng. Vel. Magnitude: " + rb.angularVelocity.magnitude,
+                    + "\nAng. Vel. Magnitude: " + rb.angularVelocity.magnitude
+                    + "\nCharge Timer: " + chargeTimer
+                    + "\nCharge Level:" + chargeLevel,
                 style
             );
     }
