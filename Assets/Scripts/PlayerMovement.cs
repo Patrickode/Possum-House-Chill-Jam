@@ -146,8 +146,8 @@ public class PlayerMovement : MonoBehaviour
     private bool IsGrounded()
     {
         //Thanks to http://answers.unity.com/answers/196395/view.html for this!
-        //Cast a ray downward to the extent of the object, plus a tiny bit of leeway.
-        return Physics.Raycast(transform.position, -Vector3.up, coll.bounds.extents.y + 0.001f);
+        //Cast a sphere downward a very small distance to see if there's a collider directly underneath the player.
+        return Physics.SphereCast(transform.position, coll.bounds.extents.y - 0.0001f, Vector3.down, out _, 0.001f);
     }
 
     private void OnGUI()
