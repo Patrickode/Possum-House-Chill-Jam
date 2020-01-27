@@ -762,4 +762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1419933954}
   coll: {fileID: 1419933955}
+  rend: {fileID: 1419933956}
   jumpStrength: 5
+  secondsToCharge: 0.85
+  maxChargeMultiplier: 2

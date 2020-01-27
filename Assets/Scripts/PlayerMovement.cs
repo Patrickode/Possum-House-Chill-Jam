@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     [SerializeField]
     private Collider coll;
+    [SerializeField]
+    private Renderer rend;
 
     public float jumpStrength = 5;
     /// <summary>
@@ -21,12 +23,17 @@ public class PlayerMovement : MonoBehaviour
 
     private float maxMagn;
     private int chargeLevel = 1;
-    private const int MaxChargeLevel = 3;
     private float chargeTimer = 0;
+
+    private Color noCharge;
+    private Color fullCharge;
 
     private void Start()
     {
         maxMagn = Vector3.Magnitude((Vector3.up + Vector3.right) * jumpStrength);
+
+        noCharge = rend.material.color;
+        fullCharge = new Color(1, 0, 0, rend.material.color.a);
     }
 
     void Update()
@@ -58,6 +65,26 @@ public class PlayerMovement : MonoBehaviour
                 ApplyJumpInput(-Vector3.right);
             }
         }
+        else
+        {
+            //Reset all charging while in midair.
+            chargeTimer = 0;
+            chargeLevel = 1;
+        }
+
+        //Change the player's color to indicate charge level.
+        if (chargeLevel == 1)
+        {
+            rend.material.color = noCharge;
+        }
+        else if (chargeLevel == 2)
+        {
+            rend.material.color = Color.Lerp(noCharge, fullCharge, 0.5f);
+        }
+        else
+        {
+            rend.material.color = fullCharge;
+        }
     }
 
     /// <summary>
@@ -69,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         chargeTimer += Time.deltaTime;
 
         //If not at max charge and the timer's been ticking long enough, reset the timer and move up a charge level.
-        if (chargeLevel < MaxChargeLevel && chargeTimer >= secondsToCharge)
+        if (chargeLevel < 3 && chargeTimer >= secondsToCharge)
         {
             chargeTimer = 0;
             chargeLevel++;
@@ -93,8 +120,7 @@ public class PlayerMovement : MonoBehaviour
         //Now multiply the velocity depending on charge level, if necessary.
         if (chargeLevel > 1)
         {
-            //If not at max charge, since we got this far, we're at the second stage.
-            if (chargeLevel < MaxChargeLevel)
+            if (chargeLevel == 2)
             {
                 //Multiply by the midway point between 1 and max.
                 rb.velocity *= Mathf.Lerp(1, maxChargeMultiplier, 0.5f);
