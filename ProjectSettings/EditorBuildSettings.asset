@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CometField2.unity
     guid: 5875664e38a09214b994f1747b109820
+  - enabled: 1
+    path: Assets/Scenes/CometField3.unity
+    guid: d6fa148f870225144ac3ec82d0d12fdb
+  - enabled: 1
+    path: Assets/Scenes/CometField4.unity
+    guid: cab702caecabc994aa820fbbca12a4b1
   m_configObjects: {}
