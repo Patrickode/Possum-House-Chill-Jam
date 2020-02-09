@@ -150,21 +150,21 @@ public class PlayerMovement : MonoBehaviour
         return Physics.SphereCast(transform.position, coll.bounds.extents.y - 0.0001f, Vector3.down, out _, 0.001f);
     }
 
-    private void OnGUI()
-    {
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 15;
-        style.normal.textColor = Color.white;
-        GUI.Box
-            (
-                new Rect(10, 10, 175, 175),
-                "Velocity: " + rb.velocity
-                    + "\nAng. Velocity: " + rb.angularVelocity
-                    + "\nVel Magnitude: " + rb.velocity.magnitude
-                    + "\nAng. Vel. Magnitude: " + rb.angularVelocity.magnitude
-                    + "\nCharge Timer: " + chargeTimer
-                    + "\nCharge Level:" + chargeLevel,
-                style
-            );
-    }
+    //private void OnGUI()
+    //{
+    //    GUIStyle style = new GUIStyle();
+    //    style.fontSize = 15;
+    //    style.normal.textColor = Color.white;
+    //    GUI.Box
+    //        (
+    //            new Rect(10, 10, 175, 175),
+    //            "Velocity: " + rb.velocity
+    //                + "\nAng. Velocity: " + rb.angularVelocity
+    //                + "\nVel Magnitude: " + rb.velocity.magnitude
+    //                + "\nAng. Vel. Magnitude: " + rb.angularVelocity.magnitude
+    //                + "\nCharge Timer: " + chargeTimer
+    //                + "\nCharge Level:" + chargeLevel,
+    //            style
+    //        );
+    //}
 }
